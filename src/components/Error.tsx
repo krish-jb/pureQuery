@@ -4,12 +4,9 @@ function Error() {
       <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8 dark:bg-zinc-800 dark:text-zinc-200">
         <div className="text-center">
           <p className="text-base my-2 font-semibold text-indigo-600">404</p>
-          {/* <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5x backdrop-blur-3xl bg-orange-500">
-            Page not found
-          </h1> */}
           <div className="relative p-2 inline-block">
             <div className="absolute inset-0 bg-indigo-700 blur-xl"></div>
-            <h1 className="relative text-3xl font-bold tracking-tight text-zinc-800 dark:text-white sm:text-5x">
+            <h1 className="relative text-3xl font-bold text-gray-200 tracking-tight dark:text-white sm:text-5x">
             Page not found
           </h1>
           </div>
