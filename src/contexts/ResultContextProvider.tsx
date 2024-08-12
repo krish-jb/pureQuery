@@ -1,7 +1,19 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
+export interface searchResultItem {
+  link: string;
+  title: string;
+  htmlSnippet: string;
+  htmlTitle: string;
+  snippet: string;
+}
+
+export interface searchResults {
+  items: serachResultItem[];
+}
+
 interface ResultContextType {
-  results: string[];
+  results: searchResults;
   isLoading: boolean;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
@@ -13,10 +25,10 @@ interface ResultReturn {
 }
 
 const ResultContext = createContext<ResultContextType | undefined>(undefined);
-const baseUrl = "https://google-search74.p.rapidapi.com";
+const baseUrl = "https://google-search72.p.rapidapi.com";
 
-const ResultContextProvider = ({ children }: {children: ReactNode}) => {
-  const [results, setResults] = useState<string[]>([]);
+export const ResultContextProvider = ({ children }: ResultReturn) => {
+  const [results, setResults] = useState<searchResults>({ items: [] });
   const [isLoading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -25,11 +37,12 @@ const ResultContextProvider = ({ children }: {children: ReactNode}) => {
     const response = await fetch(`${baseUrl}${type}`, {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "8b725df164msh02d3f6a2fdc754dp177678jsne728781d5504",
-        "x-rapidapi-host": "google-search74.p.rapidapi.com",
+        "x-rapidapi-key": "e10dd9551bmsh11374e7b97be551p1f5d4cjsncaec8d125dd3",
+        "x-rapidapi-host": "google-search72.p.rapidapi.com",
       },
     });
-    const data = await response.json();
+    const data: searchResults = await response.json();
+    console.log(data);
 
     setResults(data);
     setLoading(false);
@@ -41,7 +54,7 @@ const ResultContextProvider = ({ children }: {children: ReactNode}) => {
         isLoading,
         searchTerm,
         setSearchTerm,
-        getResults
+        getResults,
       }}
     >
       {children}
@@ -49,10 +62,12 @@ const ResultContextProvider = ({ children }: {children: ReactNode}) => {
   );
 };
 
-export const useResultContext = () => {
+const useResultContext = () => {
   const context = useContext(ResultContext);
   if (!context) {
-    throw new Error("useResultContext must be used within a ResultContextProvider");
+    throw new Error(
+      "useResultContext must be used within a ResultContextProvider"
+    );
   }
   return context;
 };

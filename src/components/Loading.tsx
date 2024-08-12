@@ -4,8 +4,8 @@ const Loading = () => {
   return (
     <ColorRing
       visible={true}
-      height="80"
-      width="80"
+      height="30"
+      width="30"
       ariaLabel="color-ring-loading"
       wrapperStyle={{}}
       wrapperClass="color-ring-wrapper"
