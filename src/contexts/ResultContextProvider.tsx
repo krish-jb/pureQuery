@@ -44,11 +44,11 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
       headers: {
         "x-rapidapi-key": "e10dd9551bmsh11374e7b97be551p1f5d4cjsncaec8d125dd3",
         "x-rapidapi-host": "google-search72.p.rapidapi.com",
-      }, */
-
+      },
+    }); */
     // ------------ Remove ------------
     try {
-      const response: Response = await fetch("/output2.json"); // testing
+      const response: Response = await fetch("./videos.json"); // testing
       if (!response.ok) {
         throw new Error("Network response was not OK");
       }
@@ -60,15 +60,13 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
     } finally {
       setLoading(false);
     }
-
     // ------------ Remove ------------
-  };
-  /* const data: searchResults = await response.json();
+    /* const data: searchResults = await response.json();
     console.log(data); // testing
-  
+
     setResults(data);
     setLoading(false); */
-  //};
+  };
   return (
     <ResultContext.Provider
       value={{

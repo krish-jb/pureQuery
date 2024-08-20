@@ -4,7 +4,7 @@ import Error from './Error';
 
 export const Router = () => {
   return (
-    <div  className="p-4">
+    <div className="px-1">
       <Routes>
         <Route path="/" element={<Navigate to="/search" />} />
         <Route path='/:category' element={<Results />} />
