@@ -11,8 +11,14 @@ export interface searchResultItem {
   thumbnailImageUrl: string;
 }
 
+export interface videoSearchResutlsData {
+  title: string;
+  videoId: string;
+}
+
 export interface searchResults {
   items?: searchResultItem[];
+  data?: videoSearchResutlsData[];
 }
 
 interface ResultContextType {
@@ -20,7 +26,8 @@ interface ResultContextType {
   isLoading: boolean;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  getResults: (type: string) => Promise<void>;
+  getResults: (type: string, isNewsImages: boolean) => Promise<void>;
+  getVideoResults: (type: string) => Promise<void>;
 }
 
 interface ResultReturn {
@@ -29,6 +36,7 @@ interface ResultReturn {
 
 const ResultContext = createContext<ResultContextType | undefined>(undefined);
 const baseUrl = "https://google-search72.p.rapidapi.com";
+const baseUrlVideo = "https://yt-api.p.rapidapi.com/search";
 
 export const ResultContextProvider = ({ children }: ResultReturn) => {
   const [results, setResults] = useState<searchResults>({
@@ -37,18 +45,30 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("microprocessors");
 
-  const getResults = async (type: string) => {
-    setLoading(true);
-    /* const response = await fetch(`${baseUrl}${type}`, {
+  const fetchData = async (
+    baseUrl: string,
+    query: string,
+    api_key: string,
+    api_host: string
+  ) => {
+    const response = await fetch(`${baseUrl}${query}`, {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "e10dd9551bmsh11374e7b97be551p1f5d4cjsncaec8d125dd3",
-        "x-rapidapi-host": "google-search72.p.rapidapi.com",
+        "x-rapidapi-key": api_key,
+        "x-rapidapi-host": api_host,
       },
-    }); */
+    });
+    const data: searchResults = await response.json();
+    return data;
+  };
+
+  const getResults = async (query: string, isNewsImages: boolean = false) => {
+    const delay = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+    setLoading(true);
     // ------------ Remove ------------
-    try {
-      const response: Response = await fetch("./videos.json"); // testing
+    /* try {
+      const response: Response = await fetch("./images.json"); // testing
       if (!response.ok) {
         throw new Error("Network response was not OK");
       }
@@ -59,13 +79,49 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-    }
+    } */
     // ------------ Remove ------------
-    /* const data: searchResults = await response.json();
-    console.log(data); // testing
+    const modQuery = `${query}&start=0`;
+    const data: searchResults = await fetchData(
+      baseUrl,
+      modQuery,
+      import.meta.env.VITE_GOOGLE_SEARCH_API_KEY,
+      import.meta.env.VITE_GOOGLE_SEARCH_API_URI
+    );
+    delay(1000);
+    if (isNewsImages) {
+      const modQuery = `${query}&start=10`;
+      console.log(modQuery);
+      const data2: searchResults = await fetchData(
+        baseUrl,
+        modQuery,
+        import.meta.env.VITE_GOOGLE_SEARCH_API_KEY,
+        import.meta.env.VITE_GOOGLE_SEARCH_API_URI
+      );
+      const combinedData: searchResults = {
+        items: [...(data.items || []), ...(data2.items || [])],
+        data: [],
+      };
+      console.log(combinedData);
+      setResults(combinedData);
+    } else {
+      console.log(data); // testing
+      setResults(data);
+    }
+    setLoading(false);
+  };
 
+  const getVideoResults = async (query: string) => {
+    setLoading(true);
+    const data: searchResults = await fetchData(
+      baseUrlVideo,
+      query,
+      import.meta.env.VITE_YOUTUBE_API_KEY,
+      import.meta.env.VITE_YOUTUBE_API_URI
+    );
+    console.log(data);
     setResults(data);
-    setLoading(false); */
+    setLoading(false);
   };
   return (
     <ResultContext.Provider
@@ -75,6 +131,7 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
         searchTerm,
         setSearchTerm,
         getResults,
+        getVideoResults,
       }}
     >
       {children}

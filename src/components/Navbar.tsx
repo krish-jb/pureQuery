@@ -3,9 +3,10 @@ import { Search } from "./Search";
 interface props {
   darkTheme: boolean;
   setDarkTheme: (setTo: boolean) => void;
+  setHasFetched: (setTo: boolean) => void;
 }
 
-export const Navbar = ({ darkTheme, setDarkTheme }: props) => {
+export const Navbar = ({ darkTheme, setDarkTheme, setHasFetched }: props) => {
   return (
     <div className="p-5 pb-0 flex flex-wrap sm:justify-between justify-center items-center border-b dark:border-zinc-700 border-zinc-200">
       <div className="flex justify-between items-center space-x-5 w-screen">
@@ -23,7 +24,7 @@ export const Navbar = ({ darkTheme, setDarkTheme }: props) => {
           {darkTheme ? "💡" : "🌙"}
         </button>
       </div>
-      <Search />
+      <Search setHasFetched={setHasFetched} />
     </div>
   );
 };
