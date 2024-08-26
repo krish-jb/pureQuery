@@ -66,21 +66,6 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
     const delay = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
     setLoading(true);
-    // ------------ Remove ------------
-    /* try {
-      const response: Response = await fetch("./images.json"); // testing
-      if (!response.ok) {
-        throw new Error("Network response was not OK");
-      }
-      const data: searchResults = await response.json();
-      console.log(data);
-      setResults(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    } */
-    // ------------ Remove ------------
     const modQuery = `${query}&start=0`;
     const data: searchResults = await fetchData(
       baseUrl,
@@ -91,7 +76,6 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
     delay(1000);
     if (isNewsImages) {
       const modQuery = `${query}&start=10`;
-      console.log(modQuery);
       const data2: searchResults = await fetchData(
         baseUrl,
         modQuery,
@@ -102,10 +86,8 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
         items: [...(data.items || []), ...(data2.items || [])],
         data: [],
       };
-      console.log(combinedData);
       setResults(combinedData);
     } else {
-      console.log(data); // testing
       setResults(data);
     }
     setLoading(false);
@@ -119,7 +101,6 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
       import.meta.env.VITE_YOUTUBE_API_KEY,
       import.meta.env.VITE_YOUTUBE_API_URI
     );
-    console.log(data);
     setResults(data);
     setLoading(false);
   };
