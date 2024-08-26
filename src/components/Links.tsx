@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface props {
   setHasFetched: (setTo: boolean) => void;
@@ -17,7 +18,10 @@ const links: LinkType[] = [
 ];
 
 const Links = ({ setHasFetched }: props) => {
-  setHasFetched(false);
+  useEffect(() => {
+    setHasFetched(false);
+  }, [useLocation()]);
+
   return (
     <div className="flex sm:justify-around justify-between items-center mt-4">
       {links.map(({ url, text }: LinkType, index: number) => (

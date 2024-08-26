@@ -13,6 +13,7 @@ export const Search = ({ setHasFetched }: props) => {
   const search = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setSearchTerm(text);
+      setHasFetched(false);
     }
   };
 

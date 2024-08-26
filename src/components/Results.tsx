@@ -26,30 +26,14 @@ function Results({ hasFetched, setHasFetched }: props) {
           );
           setHasFetched(true);
         }
-      } else if (category === "news") {
-        if (!hasFetched) {
-          getResults(
-            `/imagesearch?q=${searchTerm} ${category}&lr=en-in&num=10`,
-            true
-          );
-          setHasFetched(true);
-        }
-      } else if (category === "images") {
-        if (!hasFetched) {
-          getResults(
-            `/imagesearch?q=${searchTerm}&gl=in&lr=lang_en&num=10`,
-            true
-          );
-          setHasFetched(true);
-        }
       } else {
         if (!hasFetched) {
-          getResults(`/search?q=${searchTerm}&lr=en-US&num=40`, false);
+          getResults(searchTerm, category);
           setHasFetched(true);
         }
       }
     }
-  }, [searchTerm, category]);
+  }, [searchTerm, category, hasFetched]);
 
   if (isLoading) return <Loading />;
 
@@ -57,15 +41,15 @@ function Results({ hasFetched, setHasFetched }: props) {
     case "search":
       return (
         <div className="flex flex-wrap justify-between lg:px-60 sm:px-20 sm:justify-around">
-          {results?.items?.map(
-            ({ link, title }: searchResultItem, index: number) => (
+          {results?.result?.map(
+            ({ href, title }: searchResultItem, index: number) => (
               <div
                 key={index}
                 className="md:w-2/5 w-full max-w-ls my-2 p-5 hover:bg-neutral-200 dark:hover:bg-zinc-900 hover:shadow-sm hover:shadow-indigo-600 dark:hover:shadow-indigo-500 rounded-md duration-100"
               >
-                <a href={link} target="_blank" rel="noreferrer">
+                <a href={href} target="_blank" rel="noreferrer">
                   <p className="text-sm">
-                    {link?.length > 30 ? link.substring(0, 30) : link}
+                    {href?.length > 30 ? href.substring(0, 30) : href}
                   </p>
                   <p className="text-lg hover:underline dark:text-blue-300 text-blue-700">
                     {title}
@@ -79,7 +63,7 @@ function Results({ hasFetched, setHasFetched }: props) {
     case "images":
       return (
         <div className="flex flex-wrap justify-center my-6 sm:px-56 items-center">
-          {results?.items?.map(
+          {results?.result?.map(
             (
               { title, thumbnailImageUrl, originalImageUrl }: searchResultItem,
               index: number
@@ -122,7 +106,7 @@ function Results({ hasFetched, setHasFetched }: props) {
     case "news":
       return (
         <div className="flex flex-wrap justify-between xl:px-60 lg:px-50 lg:mx-20 sm:justify-around">
-          {results?.items?.map(
+          {results?.result?.map(
             (
               { title, thumbnailImageUrl, contextLink }: searchResultItem,
               index: number
