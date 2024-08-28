@@ -6,13 +6,6 @@ export interface searchResultItem {
   image: string;
   thumbnail: string;
   url: string;
-  htmlSnippet: string; // old
-  htmlTitle: string; // old
-  link: string; // old
-  snippet: string; // old
-  contextLink: string; // old
-  originalImageUrl: string; // old
-  thumbnailImageUrl: string; // old
 }
 
 export interface videoSearchResutlsData {
@@ -170,7 +163,6 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
         import.meta.env.VITE_GOOGLE_SEARCH_API_URI,
         body
       );
-      console.log(response);
       setResults(response);
     } catch (error) {
       console.log(`Error fetching data: ${error}`);
