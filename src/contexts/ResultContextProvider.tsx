@@ -2,14 +2,17 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 export interface searchResultItem {
   href: string;
-  htmlSnippet: string;
-  htmlTitle: string;
-  link: string;
-  snippet: string;
   title: string;
-  contextLink: string;
-  originalImageUrl: string;
-  thumbnailImageUrl: string;
+  image: string;
+  thumbnail: string;
+  url: string;
+  htmlSnippet: string; // old
+  htmlTitle: string; // old
+  link: string; // old
+  snippet: string; // old
+  contextLink: string; // old
+  originalImageUrl: string; // old
+  thumbnailImageUrl: string; // old
 }
 
 export interface videoSearchResutlsData {
@@ -19,6 +22,7 @@ export interface videoSearchResutlsData {
 
 export interface searchResults {
   result?: searchResultItem[];
+  news?: searchResultItem[];
   data?: videoSearchResutlsData[];
 }
 
@@ -35,11 +39,28 @@ interface ResultReturn {
   children?: ReactNode;
 }
 
-interface FetchRequestBody {
+interface FetchRequestWebBody {
   text: string;
-  safesearch: "off" | "modreate" | "strict";
+  safesearch: "off" | "moderate" | "on";
   timelimit: string;
   region: string;
+  max_results: number;
+}
+
+interface FetchRequestImagesBody {
+  text: string;
+  safesearch: "off" | "moderate" | "on";
+  region: "in-en";
+  color: string;
+  size: string;
+  type_image: string;
+  layout: string;
+  max_results: number;
+}
+
+interface FetchRequestNewsBody {
+  text: string;
+  region: "in-en";
   max_results: number;
 }
 
@@ -77,7 +98,10 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
     url: string,
     api_key: string,
     api_host: string,
-    requestBody: FetchRequestBody
+    requestBody:
+      | FetchRequestWebBody
+      | FetchRequestImagesBody
+      | FetchRequestNewsBody
   ): Promise<searchResults> => {
     const response = await fetch(url, {
       method: "POST",
@@ -94,26 +118,50 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
 
   const getResults = async (query: string, type: string | undefined) => {
     setLoading(true);
-    const body: FetchRequestBody = {
-      text: query,
-      safesearch: "off",
-      timelimit: "",
-      region: "in-en",
-      max_results: 40,
-    };
+    let body:
+      | FetchRequestWebBody
+      | FetchRequestImagesBody
+      | FetchRequestNewsBody
+      | undefined = undefined;
     let url: string | undefined;
+    const searchMode = "moderate";
     switch (type) {
       case "search":
+        body = {
+          text: query,
+          safesearch: searchMode,
+          timelimit: "",
+          region: "in-en",
+          max_results: 20,
+        };
         url = `${baseUrlWeb}/websearch`;
         break;
       case "images":
+        body = {
+          text: query,
+          safesearch: searchMode,
+          region: "in-en",
+          color: "",
+          size: "",
+          type_image: "",
+          layout: "",
+          max_results: 20,
+        };
         url = `${baseUrlWeb}/imagesearch`;
         break;
       case "news":
-        url = `${baseUrlWeb}`;
+        body = {
+          text: query,
+          region: "in-en",
+          max_results: 20,
+        };
+        url = `${baseUrlWeb}/`;
         break;
       default:
         throw new Error("Invalid URL");
+    }
+    if (!body) {
+      throw new Error("Reqest Body undefined in function: getResults()");
     }
     try {
       const response = await fetchData(
@@ -124,8 +172,8 @@ export const ResultContextProvider = ({ children }: ResultReturn) => {
       );
       console.log(response);
       setResults(response);
-    } catch(error){
-        console.log(`Error fetching data: ${error}`);
+    } catch (error) {
+      console.log(`Error fetching data: ${error}`);
     } finally {
       setLoading(false);
     }

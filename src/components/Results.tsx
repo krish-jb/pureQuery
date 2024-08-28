@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useParams, Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, Navigate } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Loading from "./Loading";
 import useResultContext, {
@@ -64,19 +64,23 @@ function Results({ hasFetched, setHasFetched }: props) {
       return (
         <div className="flex flex-wrap justify-center my-6 sm:px-56 items-center">
           {results?.result?.map(
-            (
-              { title, thumbnailImageUrl, originalImageUrl }: searchResultItem,
-              index: number
-            ) => (
+            ({ title, thumbnail, image }: searchResultItem, index: number) => (
               <a
-                className="sm:p-3 p-5 hover:bg-neutral-200 dark:hover:bg-zinc-900 hover:shadow-md dark:hover:shadow-sm hover:shadow-indigo-600/40 dark:hover:shadow-indigo-600 rounded-md duration-100"
-                href={originalImageUrl}
+                className="sm:p-3 p-5 max-w-80 hover:bg-neutral-200 dark:hover:bg-zinc-900 hover:shadow-md dark:hover:shadow-sm hover:shadow-indigo-600/40 dark:hover:shadow-indigo-600 rounded-md duration-100"
+                href={image}
                 key={index}
                 target="_blank"
                 rel="noreferrer"
               >
-                <img src={thumbnailImageUrl} alt={title} loading="lazy" />
-                <p className="w-36 break-words text-sm mt-2">{title}</p>
+                <img
+                  src={thumbnail}
+                  alt={title}
+                  loading="lazy"
+                  className="max-h-80"
+                />
+                <p className="w-50 break-words text-sm mt-2">
+                  {title?.length > 50 ? title.substring(0, 50) + "..." : title}
+                </p>
               </a>
             )
           )}
@@ -106,32 +110,27 @@ function Results({ hasFetched, setHasFetched }: props) {
     case "news":
       return (
         <div className="flex flex-wrap justify-between xl:px-60 lg:px-50 lg:mx-20 sm:justify-around">
-          {results?.result?.map(
-            (
-              { title, thumbnailImageUrl, contextLink }: searchResultItem,
-              index: number
-            ) => (
+          {results?.news?.map(
+            ({ title, image, url }: searchResultItem, index: number) => (
               <div
                 key={index}
                 className="inline-flex xl:w-6/12 lg:w-full sm:w-full lg:p-5 py-5 px-3 my-3 hover:bg-neutral-200 dark:hover:bg-zinc-900 hover:shadow-sm dark:hover:shadow-sm hover:shadow-indigo-600 dark:hover:shadow-indigo-500 rounded-md duration-100"
               >
                 <a
-                  href={contextLink}
+                  href={url}
                   target="_blank"
                   rel="noreferrer"
                   className="lg:w-4/6 sm:max-w-full"
                 >
                   <p className="text-sm">
-                    {contextLink?.length > 30
-                      ? contextLink.substring(0, 30)
-                      : contextLink}
+                    {url?.length > 30 ? url.substring(0, 30) + "..." : url}
                   </p>
                   <p className="lg:text-lg sm:text-sm break-words hover:underline dark:text-blue-300 text-blue-700">
                     {title}
                   </p>
                 </a>
                 <img
-                  src={thumbnailImageUrl}
+                  src={image}
                   alt={title}
                   loading="lazy"
                   className="max-w-40 max-h-20 lg:mx-10"
