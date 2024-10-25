@@ -27,3 +27,6 @@ Google API Link - https://rapidapi.com/rphrp1985/api/google-api31 <br />
 
 The ```safesearch``` mode is set to ```moderate```, it can be changed in ```ResultContextProvider.tsx``` by setting <br />
 ```searchMode``` at line 127 to ```'off' | 'moderate' | 'on'```.
+
+## Screenshots
+![Web Search](./Screenshots/WebSearchPanel.png?raw=true "Web Search")
