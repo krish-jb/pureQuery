@@ -29,4 +29,8 @@ The ```safesearch``` mode is set to ```moderate```, it can be changed in ```Resu
 ```searchMode``` at line 127 to ```'off' | 'moderate' | 'on'```.
 
 ## Screenshots
-![Web Search](./Screenshots/WebSearchPanel.png?raw=true "Web Search")
+![Web Search](./Screenshots/WebSearchPanel.png?raw=true "Web Search")<br />
+![Image Search](./Screenshots/ImagesPanel.png?raw=true "Image Search")<br />
+![News Search](./Screenshots/newsPanel.png?raw=true "News Search")<br />
+![Video Search](./Screenshots/videoPanel.png?raw=true "Video Search")<br />
+![White Mode](./Screenshots/whiteMode.png?raw=true "White Mode News Search")<br />
