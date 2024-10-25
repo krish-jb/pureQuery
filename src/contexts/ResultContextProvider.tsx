@@ -58,8 +58,9 @@ interface FetchRequestNewsBody {
 }
 
 const ResultContext = createContext<ResultContextType | undefined>(undefined);
-const baseUrlWeb = "https://google-api31.p.rapidapi.com";
-const baseUrlVideo = "https://yt-api.p.rapidapi.com/search";
+const baseUrlWeb = "https://" + import.meta.env.VITE_GOOGLE_SEARCH_API_URI;
+const baseUrlVideo =
+  "https://" + import.meta.env.VITE_YOUTUBE_API_URI + "/search";
 
 export const ResultContextProvider = ({ children }: ResultReturn) => {
   const [results, setResults] = useState<searchResults>({
